@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { SequelizeModule } from '@nestjs/sequelize';
+import { AccountModule } from './Account/account.module';
+import { SettingModule } from './Setting/setting.module';
 
 import * as dotenv from 'dotenv';
 dotenv.config();
@@ -21,6 +23,8 @@ dotenv.config();
         underscored: true,
       },
     }),
+    AccountModule,
+    SettingModule,
   ],
   controllers: [AppController],
   providers: [AppService],
