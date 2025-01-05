@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { AccountModule } from './Account/account.module';
 import { SettingModule } from './Setting/setting.module';
+import { AuthenticationModule } from './Authentication/authentication.module';
 
 import * as dotenv from 'dotenv';
 dotenv.config();
@@ -25,6 +26,7 @@ dotenv.config();
     }),
     AccountModule,
     SettingModule,
+    AuthenticationModule,
   ],
   controllers: [AppController],
   providers: [AppService],
