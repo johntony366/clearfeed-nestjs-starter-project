@@ -6,11 +6,14 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { SettingService } from './setting.service';
 import { CreateSettingDto } from './dto/create-setting.dto';
 import { UpdateSettingDto } from './dto/update-setting.dto';
+import { AuthGuard } from '../Authentication/guards/auth.guard';
 
+@UseGuards(AuthGuard)
 @Controller('setting')
 export class SettingController {
   constructor(private readonly settingService: SettingService) {}
