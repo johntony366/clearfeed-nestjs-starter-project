@@ -9,7 +9,7 @@ import {
   DeletedAt,
   BelongsTo,
 } from 'sequelize-typescript';
-import { Account } from './Account.model';
+import { Account } from '../../Account/models/account.model';
 
 @Table({
   tableName: 'settings',

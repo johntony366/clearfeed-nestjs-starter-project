@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { SettingService } from './setting.service';
 import { SettingController } from './setting.controller';
 import { SequelizeModule } from '@nestjs/sequelize';
-import { Setting } from '../models/Setting.model';
+import { Setting } from './models/setting.model';
 
 @Module({
   imports: [SequelizeModule.forFeature([Setting])],

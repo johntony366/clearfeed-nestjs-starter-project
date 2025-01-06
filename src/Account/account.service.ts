@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateAccountDto } from './dto/create-account.dto';
 import { InjectModel } from '@nestjs/sequelize';
-import { Account } from '../models/Account.model';
+import { Account } from './models/account.model';
 
 @Injectable()
 export class AccountService {

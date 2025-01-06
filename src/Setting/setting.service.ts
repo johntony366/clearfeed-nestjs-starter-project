@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateSettingDto } from './dto/create-setting.dto';
 import { UpdateSettingDto } from './dto/update-setting.dto';
 import { InjectModel } from '@nestjs/sequelize';
-import { Setting } from '../models/Setting.model';
+import { Setting } from './models/setting.model';
 
 @Injectable()
 export class SettingService {
