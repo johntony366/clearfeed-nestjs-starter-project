@@ -12,15 +12,14 @@ export class SettingService {
   ) {}
 
   async create(createSettingDto: CreateSettingDto) {
-    if (!this.validateValueType(createSettingDto)) {
-      throw new HttpException(
-        'The provided value type does not match the expected data type.',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
+    this.validateValueType(createSettingDto);
+
     const createdSetting = await this.settingModel.create({
       ...createSettingDto,
-      value: createSettingDto.value as string,
+      value:
+        createSettingDto.dataType === 'json'
+          ? JSON.stringify(createSettingDto.value)
+          : createSettingDto.value.toString(),
     });
 
     return {
@@ -49,12 +48,8 @@ export class SettingService {
   }
 
   async update(id: number, updateSettingDto: UpdateSettingDto) {
-    if (!this.validateValueType(updateSettingDto)) {
-      throw new HttpException(
-        'The provided value type does not match the expected data type.',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
+    this.validateValueType(updateSettingDto);
+
     const [numberOfAffectedRows, [updatedSetting]] =
       await this.settingModel.update(
         {
@@ -99,32 +94,16 @@ export class SettingService {
     const { value } = object;
     const { dataType } = object;
 
-    if (dataType === 'string' && typeof value !== 'string') {
-      return false;
+    if (
+      (dataType === 'json' && typeof value === 'object') ||
+      dataType === typeof value
+    ) {
+      return;
+    } else {
+      throw new HttpException(
+        'The provided value type does not match the expected data type.',
+        HttpStatus.BAD_REQUEST,
+      );
     }
-
-    if (dataType === 'number' && typeof value !== 'number') {
-      return false;
-    }
-
-    if (dataType === 'boolean' && typeof value !== 'boolean') {
-      return false;
-    }
-
-    if (dataType === 'json') {
-      try {
-        if (typeof value === 'string') {
-          JSON.parse(value); // Validates stringified JSON
-        } else if (typeof value !== 'object') {
-          return false; // Only valid objects or valid JSON string are accepted
-        } else {
-          object.value = JSON.stringify(value); // Stringify object
-        }
-      } catch {
-        return false;
-      }
-    }
-
-    return true;
   }
 }
