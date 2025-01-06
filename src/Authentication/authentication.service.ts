@@ -12,9 +12,12 @@ export class AuthenticationService {
       const access_token = await this.jwtService.signAsync(tokenPayload);
 
       return {
-        userId: 0,
-        username: loginDto.username,
-        access_token,
+        message: 'Login successful',
+        data: {
+          userId: 0,
+          username: loginDto.username,
+          access_token,
+        },
       };
     } else {
       throw new HttpException(

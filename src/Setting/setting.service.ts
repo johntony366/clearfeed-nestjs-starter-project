@@ -11,53 +11,88 @@ export class SettingService {
     private settingModel: typeof Setting,
   ) {}
 
-  create(createSettingDto: CreateSettingDto) {
+  async create(createSettingDto: CreateSettingDto) {
     if (!this.validateValueType(createSettingDto)) {
       throw new HttpException(
         'The provided value type does not match the expected data type.',
         HttpStatus.BAD_REQUEST,
       );
     }
-    return this.settingModel.create({
+    const createdSetting = await this.settingModel.create({
       ...createSettingDto,
       value: createSettingDto.value as string,
     });
+
+    return {
+      message: 'Setting successfully created',
+      data: createdSetting,
+    };
   }
 
-  findAll() {
-    return this.settingModel.findAll();
+  async findAll() {
+    const settings = await this.settingModel.findAll();
+    return {
+      message: 'Settings retrieved successfully',
+      data: settings,
+    };
   }
 
-  findOne(id: number) {
-    return this.settingModel.findByPk(id);
+  async findOne(id: number) {
+    const setting = await this.settingModel.findByPk(id);
+    if (!setting) {
+      throw new HttpException('Setting not found', HttpStatus.NOT_FOUND);
+    }
+    return {
+      message: 'Setting retrieved successfully',
+      data: setting,
+    };
   }
 
-  update(id: number, updateSettingDto: UpdateSettingDto) {
+  async update(id: number, updateSettingDto: UpdateSettingDto) {
     if (!this.validateValueType(updateSettingDto)) {
       throw new HttpException(
         'The provided value type does not match the expected data type.',
         HttpStatus.BAD_REQUEST,
       );
     }
-    return this.settingModel.update(
-      {
-        ...updateSettingDto,
-        value: updateSettingDto.value as string,
-      },
-      {
-        where: {
-          id,
+    const [numberOfAffectedRows, [updatedSetting]] =
+      await this.settingModel.update(
+        {
+          ...updateSettingDto,
+          value: updateSettingDto.value as string,
         },
-      },
-    );
+        {
+          where: {
+            id,
+          },
+          returning: true,
+        },
+      );
+
+    if (numberOfAffectedRows === 0) {
+      throw new HttpException('Setting not found', HttpStatus.NOT_FOUND);
+    }
+
+    return {
+      message: 'Setting updated successfully',
+      data: updatedSetting,
+    };
   }
 
-  remove(id: number) {
-    return this.settingModel.destroy({
+  async remove(id: number) {
+    const deleted = await this.settingModel.destroy({
       where: {
         id,
       },
     });
+
+    if (deleted === 0) {
+      throw new HttpException('Setting not found', HttpStatus.NOT_FOUND);
+    }
+
+    return {
+      message: 'Setting deleted successfully',
+    };
   }
 
   private validateValueType(object: any) {

@@ -11,12 +11,16 @@ export class AccountService {
   ) {}
   async create(createAccountDto: CreateAccountDto) {
     const existing = await this.accountModel.findOne({
-      where: { name: CreateAccountDto.name },
+      where: { name: createAccountDto.name },
     });
     if (existing) {
       throw new BadRequestException('Account name already exists');
     }
-    return this.accountModel.create(createAccountDto);
+    const createdAccount = await this.accountModel.create(createAccountDto);
+    return {
+      message: 'Account successfully created',
+      data: createdAccount,
+    };
   }
 
   // findAll() {
