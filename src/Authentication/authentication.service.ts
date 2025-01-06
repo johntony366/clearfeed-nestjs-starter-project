@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { LoginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
 
@@ -17,7 +17,10 @@ export class AuthenticationService {
         access_token,
       };
     } else {
-      return 'Invalid login';
+      throw new HttpException(
+        'Invalid login credentials provided.',
+        HttpStatus.UNAUTHORIZED,
+      );
     }
   }
 }

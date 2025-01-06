@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateSettingDto } from './dto/create-setting.dto';
 import { UpdateSettingDto } from './dto/update-setting.dto';
 import { InjectModel } from '@nestjs/sequelize';
@@ -13,7 +13,10 @@ export class SettingService {
 
   create(createSettingDto: CreateSettingDto) {
     if (!this.validateValueType(createSettingDto)) {
-      throw new Error('Value type does not match data_type');
+      throw new HttpException(
+        'The provided value type does not match the expected data type.',
+        HttpStatus.BAD_REQUEST,
+      );
     }
     return this.settingModel.create({
       ...createSettingDto,
@@ -31,7 +34,10 @@ export class SettingService {
 
   update(id: number, updateSettingDto: UpdateSettingDto) {
     if (!this.validateValueType(updateSettingDto)) {
-      throw new Error('Value type does not match data_type');
+      throw new HttpException(
+        'The provided value type does not match the expected data type.',
+        HttpStatus.BAD_REQUEST,
+      );
     }
     return this.settingModel.update(
       {
